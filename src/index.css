@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+.nav-container {
+    @apply bg-[#3251D0] p-4 flex justify-between items-center;
+}
+
+.title {
+    @apply text-white font-semibold text-[20px];
+}
+
+.create-btn {
+    @apply bg-white text-[#3251D0] pl-3 pr-3 pt-2 pb-2 rounded-[5px] mr-3;
+}
+
+.create-btn:hover {
+    @apply bg-[#2840a0] text-white;
+}
+
+.logout-btn {
+    @apply bg-red-500 text-white pl-3 pr-3 pt-2 pb-2 rounded-[5px] mr-3;
+}
+
+.logout-btn:hover {
+    @apply bg-red-700;
+}
+
+.moon-container {
+    @apply text-white ml-3 mr-3 relative top-1;
+}
+
+.moon{
+    @apply transition-all duration-300 group-hover:fill-white group-hover:stroke-white;
+}
