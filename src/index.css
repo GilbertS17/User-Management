@@ -46,5 +46,47 @@
 /* cards section */
 
 .cards-outer-container {
-  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-2;
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+}
+
+/* Card */
+
+.card-container {
+  @apply shadow-lg rounded-lg p-6 m-4 shadow-gray-300 group-hover:bg-[#9eb4ff] transition-shadow duration-300;
+}
+
+.initial-container {
+  @apply flex justify-center items-center;
+}
+
+.card-initial {
+  @apply w-16 h-16 flex items-center justify-center bg-[#3251D0] text-white text-2xl font-bold rounded-full group-hover:bg-[#1a2a6b];
+}
+
+.card-name {
+  @apply text-lg text-gray-800;
+}
+
+.card-info {
+  @apply text-gray-500 text-[14px];
+}
+
+.buttons-container {
+  @apply flex justify-end mt-2;
+}
+
+.edit-btn {
+  @apply bg-[#3251D0] text-white pl-3 pr-3 pt-[2px] pb-[2px] mr-3 rounded-[5px];
+}
+
+.edit-btn:hover {
+  @apply bg-[#2840a0] text-white;
+}
+
+.delete-btn {
+  @apply bg-red-500 text-white pl-3 pr-3 pt-[2px] pb-[2px] rounded-[5px];
+}
+
+.delete-btn:hover {
+  @apply bg-red-700;
 }
