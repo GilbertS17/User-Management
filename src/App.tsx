@@ -1,10 +1,9 @@
-import { Card } from "./Components/Card"
-import CardsContainer from "./Components/CardsContainer"
-import Navbar from "./Components/Navbar"
-import SearchInput from "./Components/SearchInput"
+import { Card } from "./Components/molecules/card/Card"
+import CardsContainer from "./Components/organisms/cardsContainer/CardsContainer"
+import Navbar from "./Components/organisms/navbar/Navbar"
+import SearchInput from "./Components/molecules/searchinput/SearchInput"
 
 function App() {
-
   return (
     <>
       <Navbar />

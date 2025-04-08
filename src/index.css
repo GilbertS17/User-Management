@@ -1,9 +1,14 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary: #3251d0;
+  --color-primary-dark: #2740a6;
+}
+
 /* Navbar */
 
 .nav-container {
-  @apply bg-[#3251D0] p-4 flex justify-between items-center;
+  @apply bg-primary p-4 flex justify-between items-center;
 }
 
 .title {
@@ -15,7 +20,7 @@
 }
 
 .create-btn:hover {
-  @apply bg-[#2840a0] text-white;
+  @apply bg-primary-dark text-white;
 }
 
 .logout-btn {
@@ -40,7 +45,7 @@
   @apply p-5 flex;
 }
 .search-input {
-  @apply max-w-md px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#3251D0];
+  @apply max-w-md px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary;
 }
 
 /* cards section */
@@ -60,7 +65,7 @@
 }
 
 .card-initial {
-  @apply w-16 h-16 flex items-center justify-center bg-[#3251D0] text-white text-2xl font-bold rounded-full group-hover:bg-[#1a2a6b];
+  @apply w-16 h-16 flex items-center justify-center bg-primary text-white text-2xl font-bold rounded-full group-hover:bg-primary-dark;
 }
 
 .card-name {
@@ -76,11 +81,11 @@
 }
 
 .edit-btn {
-  @apply bg-[#3251D0] text-white pl-3 pr-3 pt-[2px] pb-[2px] mr-3 rounded-[5px];
+  @apply bg-primary text-white pl-3 pr-3 pt-[2px] pb-[2px] mr-3 rounded-[5px];
 }
 
 .edit-btn:hover {
-  @apply bg-[#2840a0] text-white;
+  @apply bg-primary-dark text-white;
 }
 
 .delete-btn {
