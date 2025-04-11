@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/store/authStore";
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState("");
@@ -9,6 +10,15 @@ const Login: React.FC = () => {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const setAuth = useAuthStore((state) => state.setAuth);
+    const accessToken = useAuthStore((state) => state.accessToken);
+
+    useEffect(() => {
+        if (accessToken) {
+            navigate("/dashboard");
+        }
+    }, [accessToken, navigate]);
+
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -38,10 +48,13 @@ const Login: React.FC = () => {
             const data = await response.json();
 
             if (response.status === 200) {
-                // Only allow login if credentials match
                 if (email === "academy@gmail.com" && password === "academy123") {
-                    console.log("Login successful:", data);
-                    navigate("/dashboard");
+                    console.log("Login response data:", data);
+                    setAuth(data.result.data.accessToken, data.result.data.expiresIn);
+                    setTimeout(() => {
+                        navigate("/dashboard");
+                    }, 100);
+                    // console.log("Auth token after setting:", useAuthStore.getState().accessToken);
                 } else {
                     setError("Invalid credentials.");
                 }
@@ -55,8 +68,6 @@ const Login: React.FC = () => {
             setLoading(false);
         }
     };
-
-
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
