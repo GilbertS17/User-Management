@@ -6,14 +6,57 @@ const Login: React.FC = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Implement your login logic here
-        console.log("Logging in with:", { email, password });
-        navigate("/dashboard");
+
+        if (!email || !password) {
+            setError("Fill required fields.");
+            return;
+        }
+
+        try {
+            setLoading(true);
+            setError("");
+
+            const response = await fetch("/api/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    body: {
+                        email,
+                        password,
+                    },
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.status === 200) {
+                // Only allow login if credentials match
+                if (email === "academy@gmail.com" && password === "academy123") {
+                    console.log("Login successful:", data);
+                    navigate("/dashboard");
+                } else {
+                    setError("Invalid credentials.");
+                }
+            } else {
+                setError(data.message || "Invalid credentials.");
+            }
+        } catch (err) {
+            console.error(err);
+            setError("An error occurred. Please try again.");
+        } finally {
+            setLoading(false);
+        }
     };
+
+
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -28,9 +71,9 @@ const Login: React.FC = () => {
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            required
                         />
                     </div>
+
                     <div className="mb-6 relative">
                         <label className="block text-gray-700 mb-1" htmlFor="password">Password</label>
                         <input
@@ -39,7 +82,6 @@ const Login: React.FC = () => {
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            required
                         />
                         <button
                             type="button"
@@ -50,11 +92,15 @@ const Login: React.FC = () => {
                             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                         </button>
                     </div>
+
+                    {error && <p className="text-red-500 mb-4 text-sm">{error}</p>}
+
                     <button
                         type="submit"
-                        className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-2 rounded-md"
+                        className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-2 rounded-md disabled:opacity-60"
+                        disabled={loading}
                     >
-                        Login
+                        {loading ? "Logging in..." : "Login"}
                     </button>
                 </form>
             </div>
