@@ -1,24 +1,73 @@
+import { useAuthStore } from "@/store/authStore";
 import { Card } from "../molecules/card/Card";
 import SearchInput from "../molecules/searchinput/SearchInput";
 import CardsContainer from "../organisms/cardsContainer/CardsContainer";
 import Navbar from "../organisms/navbar/Navbar";
+import { useEffect, useState } from "react";
+
+type User = {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    dateOfBirth: string;
+    status: string;
+};
 
 const Dashboard = () => {
+    const [users, setUsers] = useState<User[]>([]);
+    const [error, setError] = useState("");
+    const accessToken = useAuthStore((state) => state.accessToken);
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await fetch("/api/users", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${accessToken}`,
+                        "Content-Type": "application/json",
+                    },
+                });
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.message || "Failed to fetch users");
+                }
+
+                const data = await response.json();
+                setUsers(data.result.data.users);
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } catch (err: any) {
+                setError(err.message);
+            }
+        };
+
+        if (accessToken) {
+            fetchUsers();
+        }
+    }, [accessToken]);
+
+    useEffect(() => {
+        console.log("Fetched users:", users);
+    }, [users]);
+
+    if (error) return <p>Error: {error}</p>;
+
     return (
         <>
             <Navbar />
             <SearchInput />
             <CardsContainer>
-                <Card initial="JD" name="John Doe" email="john.doe@example.com" status="active" dob="1990-05-15" />
-                <Card initial="JS" name="Jane Smith" email="jane.smith@example.com" status="locked" dob="1988-10-22" />
-                <Card initial="AJ" name="Alice Johnson" email="alice.johnson@example.com" status="active" dob="1995-02-10" />
-                <Card initial="B" name="Bob" email="bob@example.com" status="locked" dob="1980-08-05" />
-                <Card initial="CB" name="Charlie Brown" email="charlie.brown@example.com" status="active" dob="1992-11-30" />
-                <Card initial="DL" name="David Lee" email="david.lee@example.com" status="locked" dob="1987-07-14" />
-                <Card initial="E" name="Eve" email="eve.green@example.com" status="active" dob="1993-09-21" />
-                <Card initial="FW" name="Frank White" email="frank.white@example.com" status="active" dob="1994-01-25" />
-                <Card initial="GB" name="Grace Black" email="grace.black@example.com" status="locked" dob="1985-03-17" />
-                <Card initial="H" name="Hannah" email="hannah.purple@example.com" status="active" dob="1996-12-03" />
+                {users.map((user) => (
+                    <Card
+                        key={user.id}
+                        email={user.email}
+                        name={`${user.firstName} ${user.lastName ? " " + user.lastName : ""}`}
+                        dob={user.dateOfBirth}
+                        initial={`${user.firstName[0]}${user.lastName ? user.lastName[0] : ""}`}
+                        status={user.status}
+                    />
+                ))}
             </CardsContainer>
         </>
     );
