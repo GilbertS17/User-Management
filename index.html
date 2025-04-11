@@ -6,6 +6,18 @@
     <title>User Management</title>
   </head>
   <body>
+    <script>
+      try {
+        const themeData = JSON.parse(localStorage.getItem("theme-storage"));
+        if (themeData?.state?.theme === "dark") {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      } catch (e) {
+        console.error("Failed to read theme from localStorage", e);
+      }
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

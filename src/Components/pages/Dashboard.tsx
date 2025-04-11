@@ -4,6 +4,7 @@ import SearchInput from "../molecules/searchinput/SearchInput";
 import CardsContainer from "../organisms/cardsContainer/CardsContainer";
 import Navbar from "../organisms/navbar/Navbar";
 import { useEffect, useState } from "react";
+import Loading from "../molecules/Loading";
 
 type User = {
     id: string;
@@ -17,59 +18,76 @@ type User = {
 const Dashboard = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
     const accessToken = useAuthStore((state) => state.accessToken);
 
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const response = await fetch("/api/users", {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${accessToken}`,
-                        "Content-Type": "application/json",
-                    },
-                });
-                if (!response.ok) {
-                    const data = await response.json();
-                    throw new Error(data.message || "Failed to fetch users");
-                }
+    // Fetch users from API
+    const fetchUsers = async (query = "") => {
+        try {
+            setLoading(true);
+            setError("");
+            const url = query ? `/api/users?search=${encodeURIComponent(query)}` : "/api/users";
+            const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    "Content-Type": "application/json",
+                },
+            });
 
+            if (!response.ok) {
                 const data = await response.json();
-                setUsers(data.result.data.users);
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } catch (err: any) {
-                setError(err.message);
+                throw new Error(data.message || "Failed to fetch users");
             }
-        };
 
+            const data = await response.json();
+            setUsers(data.result.data.users);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            setError(err.message);
+            setUsers([]); // clear users if there's an error
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Initial fetch when accessToken is available
+    useEffect(() => {
         if (accessToken) {
             fetchUsers();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [accessToken]);
 
-    useEffect(() => {
-        console.log("Fetched users:", users);
-    }, [users]);
-
-    if (error) return <p>Error: {error}</p>;
+    // Handle search input
+    const handleSearch = (query: string) => {
+        if (accessToken) {
+            fetchUsers(query);
+        }
+    };
 
     return (
-        <>
+        <div>
             <Navbar />
-            <SearchInput />
-            <CardsContainer>
-                {users.map((user) => (
-                    <Card
-                        key={user.id}
-                        email={user.email}
-                        name={`${user.firstName} ${user.lastName ? " " + user.lastName : ""}`}
-                        dob={user.dateOfBirth}
-                        initial={`${user.firstName[0]}${user.lastName ? user.lastName[0] : ""}`}
-                        status={user.status}
-                    />
-                ))}
-            </CardsContainer>
-        </>
+            <SearchInput onSearch={handleSearch} />
+            {!loading && !error && users.length === 0 && (
+                <p className="text-center text-gray-500 min-h-screen dark:bg-primary-dark">No users found.</p>
+            )}
+            {loading ? <Loading /> :
+                <CardsContainer>
+                    {users.map((user) => (
+                        <Card
+                            key={user.id}
+                            email={user.email}
+                            name={`${user.firstName} ${user.lastName ? " " + user.lastName : ""}`}
+                            dob={user.dateOfBirth}
+                            initial={`${user.firstName[0]}${user.lastName ? user.lastName[0] : ""}`}
+                            status={user.status}
+                        />
+                    ))}
+                </CardsContainer>
+            }
+        </div>
     );
 }
 
