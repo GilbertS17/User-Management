@@ -4,7 +4,7 @@ import SearchInput from "../molecules/searchinput/SearchInput";
 import CardsContainer from "../organisms/cardsContainer/CardsContainer";
 import Navbar from "../organisms/navbar/Navbar";
 import { useEffect, useState } from "react";
-import Loading from "../molecules/Loading";
+import Loading from "../molecules/loading/Loading";
 
 type User = {
     id: string;
@@ -71,7 +71,7 @@ const Dashboard = () => {
             <Navbar />
             <SearchInput onSearch={handleSearch} />
             {!loading && !error && users.length === 0 && (
-                <p className="text-center text-gray-500 min-h-screen dark:bg-primary-dark">No users found.</p>
+                <p className="no-users-msg">No users found.</p>
             )}
             {loading ? <Loading /> :
                 <CardsContainer>

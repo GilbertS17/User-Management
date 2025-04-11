@@ -18,7 +18,7 @@ const SearchInput = ({ onSearch }: SearchInputProps) => {
             <input
                 type="text"
                 placeholder="Search users..."
-                className="search-input dark:bg-primary-super-dark dark:text-white"
+                className="search-input "
                 value={searchText}
                 onChange={handleChange}
             />

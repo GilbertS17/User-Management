@@ -19,15 +19,13 @@ const Navbar = () => {
     const toggleMenu = () => setIsMenuOpen(prev => !prev);
 
     return (
-        <div className="nav-container dark:bg-gray-800 px-4 py-3 flex items-center justify-between">
-            <h1 className="title text-xl font-bold text-gray-900 dark:text-white">User Management</h1>
+        <div className="nav-container ">
+            <h1 className="title">User Management</h1>
 
-            {/* Hamburger Icon - visible only on small screens */}
             <button className="md:hidden text-white" onClick={toggleMenu}>
                 {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
 
-            {/* Menu Items */}
             <div
                 className={`flex flex-col md:flex-row md:items-center gap-2 md:gap-4 transition-all duration-300 
                 ${isMenuOpen ? "block" : "hidden"} md:flex`}
