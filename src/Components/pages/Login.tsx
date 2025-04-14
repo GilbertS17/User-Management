@@ -37,26 +37,16 @@ const Login: React.FC = () => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    body: {
-                        email,
-                        password,
-                    },
+                    email,
+                    password,
                 }),
             });
 
             const data = await response.json();
 
             if (response.status === 200) {
-                if (email === "academy@gmail.com" && password === "academy123") {
-                    console.log("Login response data:", data);
-                    setAuth(data.result.data.accessToken, data.result.data.expiresIn);
-                    setTimeout(() => {
-                        navigate("/dashboard");
-                    }, 100);
-                    // console.log("Auth token after setting:", useAuthStore.getState().accessToken);
-                } else {
-                    setError("Invalid credentials.");
-                }
+                setAuth(data.result.data.accessToken, data.result.data.expiresIn);
+                navigate("/dashboard");
             } else {
                 setError(data.message || "Invalid credentials.");
             }
