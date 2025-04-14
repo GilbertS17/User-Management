@@ -36,19 +36,18 @@ const Login: React.FC = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    email,
-                    password,
-                }),
+                body: JSON.stringify({ email, password }),
             });
 
             const data = await response.json();
+            console.log("Login response:", response.status, data); // 👈 TEMP LOG
 
-            if (response.status === 200) {
-                setAuth(data.result.data.accessToken, data.result.data.expiresIn);
+            if (response.ok && data?.result?.accessToken) {
+                setAuth(data.result.accessToken, data.result.expiresIn);
                 navigate("/dashboard");
             } else {
-                setError(data.message || "Invalid credentials.");
+                // ✅ Always set error from server if it exists
+                setError(data?.message || "Invalid credentials.");
             }
         } catch (err) {
             console.error(err);
