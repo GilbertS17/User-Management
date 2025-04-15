@@ -42,8 +42,8 @@ const Login: React.FC = () => {
             const data = await response.json();
             console.log("Login response:", response.status, data); // 👈 TEMP LOG
 
-            if (response.ok && data?.result?.accessToken) {
-                setAuth(data.result.accessToken, data.result.expiresIn);
+            if (response.ok && data?.result?.data?.accessToken) {
+                setAuth(data.result?.data?.accessToken, data.result.expiresIn);
                 navigate("/dashboard");
             } else {
                 // ✅ Always set error from server if it exists
