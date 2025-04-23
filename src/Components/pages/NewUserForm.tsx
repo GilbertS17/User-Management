@@ -1,21 +1,30 @@
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import Navbar from "../organisms/navbar/Navbar";
 import InputField from "../molecules/inputfield/InputField";
 
-type FormValues = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  dob: string;
-  status: string;
-};
+const userSchema = z.object({
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().optional(),
+  email: z.string().email("Invalid email address"),
+  dob: z
+    .string()
+    .refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date" }),
+  status: z.enum(["Active", "Inactive"]),
+});
+
+type FormValues = z.infer<typeof userSchema>;
 
 const AddUser: React.FC = () => {
   const {
     register,
     handleSubmit,
+    formState: { errors },
   } = useForm<FormValues>({
+    resolver: zodResolver(userSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -46,12 +55,20 @@ const AddUser: React.FC = () => {
               register={register}
               required
             />
+            {errors.firstName && (
+              <p className="text-sm text-red-600 mt-1">{errors.firstName.message}</p>
+            )}
+
             <InputField
               label="Last Name (Optional)"
               type="text"
               name="lastName"
               register={register}
             />
+            {errors.lastName && (
+              <p className="text-sm text-red-600 mt-1">{errors.lastName.message}</p>
+            )}
+
             <InputField
               label="Email"
               type="email"
@@ -59,12 +76,19 @@ const AddUser: React.FC = () => {
               register={register}
               required
             />
+            {errors.email && (
+              <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>
+            )}
+
             <InputField
               label="Date of Birth"
               type="date"
               name="dob"
               register={register}
             />
+            {errors.dob && (
+              <p className="text-sm text-red-600 mt-1">{errors.dob.message}</p>
+            )}
 
             <div className="mb-6">
               <label className="block text-sm text-gray-700 dark:text-gray-300 mb-1">
@@ -77,6 +101,9 @@ const AddUser: React.FC = () => {
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>
               </select>
+              {errors.status && (
+                <p className="text-sm text-red-600 mt-1">{errors.status.message}</p>
+              )}
             </div>
 
             <div className="flex justify-center">
