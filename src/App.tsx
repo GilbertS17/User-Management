@@ -5,6 +5,8 @@ import Login from "./Components/pages/Login"
 import PrivateRoute from "./Components/pages/PrivateRoute"
 import { useThemeStore } from "@/store/themeStore";
 import { useEffect, useRef } from "react"
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
 
 function App() {
   const theme = useThemeStore((state) => state.theme);
@@ -21,8 +23,10 @@ function App() {
     }
   }, [theme]);
 
+  const queryClient = new QueryClient();
+
   return (
-    <div>
+    <QueryClientProvider client={queryClient}>
       <Router>
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
@@ -33,7 +37,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
-    </div>
+    </QueryClientProvider>
   )
 }
 
