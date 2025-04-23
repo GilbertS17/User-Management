@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useAuthStore } from "@/store/authStore";
 import { Card } from "../molecules/card/Card";
 import SearchInput from "../molecules/searchinput/SearchInput";
