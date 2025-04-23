@@ -1,8 +1,9 @@
-export interface InputFieldProps {
+import { UseFormRegister, FieldValues, Path } from "react-hook-form";
+
+export interface InputFieldProps<TFormValues extends FieldValues> {
   label: string;
   type: string;
-  name: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  name: Path<TFormValues>;  
   required?: boolean;
+  register: UseFormRegister<TFormValues>;
 }
