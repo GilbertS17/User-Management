@@ -81,7 +81,7 @@ const Dashboard = () => {
 
     return (
         <div>
-            <Navbar />
+            <Navbar showNavItems={true} />
             <SearchInput onSearch={handleSearch} />
             {isLoading && <Loading />}
             {isError && <p className="text-red-500">Error: {error?.message}</p>}
