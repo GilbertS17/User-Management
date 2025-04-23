@@ -19,6 +19,7 @@ const Dashboard = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
     const accessToken = useAuthStore((state) => state.accessToken);
 
     // Fetch users from API
@@ -42,28 +43,35 @@ const Dashboard = () => {
 
             const data = await response.json();
             setUsers(data.result.data.users);
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (err: any) {
-            setError(err.message);
-            setUsers([]); // clear users if there's an error
+        } catch (err) {
+            setError(err as string);
+            setUsers([]);
         } finally {
             setLoading(false);
         }
     };
 
-    // Initial fetch when accessToken is available
+    // Debounce search query
+    useEffect(() => {
+        const delayDebounce = setTimeout(() => {
+            if (accessToken) {
+                fetchUsers(searchQuery);
+            }
+        }, 500); // 500ms delay
+
+        return () => clearTimeout(delayDebounce);
+    }, [searchQuery, accessToken]);
+
+    // Initial fetch
     useEffect(() => {
         if (accessToken) {
             fetchUsers();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [accessToken]);
 
-    // Handle search input
+    // Update search query on input change
     const handleSearch = (query: string) => {
-        if (accessToken) {
-            fetchUsers(query);
-        }
+        setSearchQuery(query);
     };
 
     return (
