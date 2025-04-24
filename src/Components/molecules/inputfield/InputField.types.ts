@@ -6,4 +6,5 @@ export interface InputFieldProps<TFormValues extends FieldValues> {
   name: Path<TFormValues>;  
   required?: boolean;
   register: UseFormRegister<TFormValues>;
+  error?: string;
 }

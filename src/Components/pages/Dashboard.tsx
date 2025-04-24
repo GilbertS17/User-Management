@@ -43,7 +43,7 @@ const Dashboard = () => {
     }, [location.search]);
 
     // Fetch users based on the search query
-    const { data: users = [], isLoading, isError, error } = useQuery<User[], Error>({
+    const { data: users = [], isLoading, isError, error, refetch } = useQuery<User[], Error>({
         queryKey: ["users", debouncedSearch, accessToken], // use search query and access token for caching
         queryFn: async () => {
             // Constructing the URL with search query if needed
@@ -68,6 +68,12 @@ const Dashboard = () => {
         enabled: !!accessToken,
         staleTime: 1000 * 60 * 5,
     });
+
+    useEffect(() => {
+        refetch();
+    }, []);
+    
+    
 
     // Handle search input and update the URL
     const handleSearch = (query: string) => {

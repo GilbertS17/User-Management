@@ -1,124 +1,161 @@
+// components/pages/AddUser.tsx
 import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { z } from "zod";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import Navbar from "../organisms/navbar/Navbar";
 import InputField from "../molecules/inputfield/InputField";
+import { userSchema, UserInput } from "../../../schemas/userSchema";
+import { useQueryClient } from "@tanstack/react-query";
 
-const userSchema = z.object({
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().optional(),
-  email: z.string().email("Invalid email address"),
-  dob: z
-    .string()
-    .refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date" }),
-  status: z.enum(["Active", "Inactive"]),
-});
 
-type FormValues = z.infer<typeof userSchema>;
+export const AddUser: React.FC = () => {
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
-const AddUser: React.FC = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>({
-    resolver: zodResolver(userSchema),
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      dob: "",
-      status: "Active",
-    },
-  });
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        watch
+    } = useForm<UserInput>({
+        resolver: zodResolver(userSchema),
+        defaultValues: {
+            firstName: "",
+            lastName: "",
+            email: "",
+            dateOfBirth: "",
+            status: "active",
+        },
+    });
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log("User Data Submitted:", data);
-    // Submit logic here
-  };
+    const watchedFirstName = watch("firstName");
+    const watchedEmail = watch("email");
 
-  return (
-    <div>
-      <Navbar showNavItems={false} />
-      <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-primary-mid-dark">
-        <div className="bg-white dark:bg-primary-dark shadow-lg rounded-xl p-8 w-full max-w-md">
-          <h2 className="text-xl font-semibold text-center text-gray-800 dark:text-white mb-6">
-            Add New User
-          </h2>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <InputField
-              label="First Name"
-              type="text"
-              name="firstName"
-              register={register}
-              required
-            />
-            {errors.firstName && (
-              <p className="text-sm text-red-600 mt-1">{errors.firstName.message}</p>
-            )}
+    const isFormValid = watchedFirstName.trim() !== "" && watchedEmail.trim() !== "";
 
-            <InputField
-              label="Last Name (Optional)"
-              type="text"
-              name="lastName"
-              register={register}
-            />
-            {errors.lastName && (
-              <p className="text-sm text-red-600 mt-1">{errors.lastName.message}</p>
-            )}
+    const mutation = useMutation({
+        mutationFn: async (data: UserInput) => {
+            const stored = localStorage.getItem("auth-storage");
 
-            <InputField
-              label="Email"
-              type="email"
-              name="email"
-              register={register}
-              required
-            />
-            {errors.email && (
-              <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>
-            )}
+            let token = "";
+            if (stored) {
+                try {
+                    const parsed = JSON.parse(stored);
+                    token = parsed?.state?.accessToken || "";
+                } catch (err) {
+                    console.error("Failed to parse auth-storage:", err);
+                }
+            }
 
-            <InputField
-              label="Date of Birth"
-              type="date"
-              name="dob"
-              register={register}
-            />
-            {errors.dob && (
-              <p className="text-sm text-red-600 mt-1">{errors.dob.message}</p>
-            )}
+            if (!token) throw new Error("No token found. Please log in again.");
 
-            <div className="mb-6">
-              <label className="block text-sm text-gray-700 dark:text-gray-300 mb-1">
-                Status
-              </label>
-              <select
-                {...register("status")}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-800 dark:text-white dark:border-gray-700"
-              >
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-              </select>
-              {errors.status && (
-                <p className="text-sm text-red-600 mt-1">{errors.status.message}</p>
-              )}
+            const res = await fetch("/api/users", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (!res.ok) {
+                const err = await res.json();
+                throw new Error(err.message || "Failed to create user");
+            }
+
+            return res.json();
+        },
+        onSuccess: () => {
+            toast.success("User created successfully!");
+            queryClient.invalidateQueries({
+                predicate: query =>
+                    query.queryKey[0] === "users"
+            });
+            navigate("/dashboard");
+        },
+        onError: (error) => {
+            toast.error(error.message || "Failed to create user");
+        },
+    });
+
+
+    const onSubmit = (data: UserInput) => {
+        mutation.mutate(data);
+    };
+
+    return (
+        <div>
+            <Navbar showNavItems={false} />
+            <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-primary-mid-dark">
+                <div className="bg-white dark:bg-primary-dark shadow-lg rounded-xl p-8 w-full max-w-md">
+                    <h2 className="text-xl font-semibold text-center text-gray-800 dark:text-white mb-6">
+                        Add New User
+                    </h2>
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <InputField
+                            label="First Name"
+                            type="text"
+                            name="firstName"
+                            register={register}
+                            error={errors.firstName?.message}
+                            required
+                        />
+                        <InputField
+                            label="Last Name (Optional)"
+                            type="text"
+                            name="lastName"
+                            register={register}
+                            error={errors.lastName?.message}
+                        />
+                        <InputField
+                            label="Email"
+                            type="email"
+                            name="email"
+                            register={register}
+                            error={errors.email?.message}
+                            required
+                        />
+                        <InputField
+                            label="Date of Birth"
+                            type="date"
+                            name="dateOfBirth"
+                            register={register}
+                            error={errors.dateOfBirth?.message}
+                        />
+
+                        <div className="mb-6">
+                            <label className="block text-sm text-gray-700 dark:text-gray-300 mb-1">
+                                Status
+                            </label>
+                            <select
+                                {...register("status")}
+                                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-800 dark:text-white dark:border-gray-700"
+                            >
+                                <option value="active">Active</option>
+                                <option value="locked">Locked</option>
+                            </select>
+                            {errors.status && (
+                                <p className="text-sm text-red-500 mt-1">{errors.status.message}</p>
+                            )}
+                        </div>
+
+                        <div className="flex justify-center">
+                            <button
+                                type="submit"
+                                className="px-4 py-2 bg-primary text-white font-semibold rounded-md hover:bg-primary-dark disabled:bg-gray-300 dark:disabled:bg-gray-700 dark:hover:bg-primary-light transition-colors"
+                                disabled={mutation.isPending || !isFormValid}
+                            >
+                                {mutation.isPending ? "Submitting..." : "Submit"}
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div className="flex justify-center">
-              <button
-                type="submit"
-                className="px-4 py-2 bg-primary text-white font-semibold rounded-md hover:bg-primary-dark disabled:bg-gray-300 dark:disabled:bg-gray-700 dark:hover:bg-primary-light transition-colors"
-              >
-                Submit
-              </button>
-            </div>
-          </form>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default AddUser;
