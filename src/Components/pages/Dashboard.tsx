@@ -113,7 +113,7 @@ const Dashboard = () => {
 
             return { previousUsers };
         },
-        onError: (err, userId, context) => {
+        onError: (err, _userId, context) => {
             if (context?.previousUsers) {
                 queryClient.setQueryData(['users', debouncedSearch, accessToken], context.previousUsers);
             }
