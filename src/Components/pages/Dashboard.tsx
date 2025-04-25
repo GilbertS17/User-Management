@@ -66,14 +66,15 @@ const Dashboard = () => {
             return data.result.data.users || [];
         },
         enabled: !!accessToken,
-        staleTime: 1000 * 60 * 5,
     });
 
     useEffect(() => {
         refetch();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    
-    
+
+
 
     // Handle search input and update the URL
     const handleSearch = (query: string) => {
@@ -104,6 +105,7 @@ const Dashboard = () => {
                                 dob={user.dateOfBirth}
                                 initial={`${user.firstName[0]}${user.lastName?.[0] || ""}`}
                                 status={user.status}
+                                onEdit={() => navigate(`/dashboard/edit/${user.id}`)}
                             />
                         ))
                     )}

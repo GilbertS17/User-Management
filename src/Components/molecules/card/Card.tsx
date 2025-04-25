@@ -1,7 +1,7 @@
 import { Initial } from "../../atoms/initial/Initial";
 import { CardProps } from "./Card.types";
 
-export const Card = ({ initial, name, email, status, dob }: CardProps) => {
+export const Card = ({ initial, name, email, status, dob , onEdit}: CardProps) => {
     return (
         <div className="card-container group">
             <Initial text={initial} />
@@ -10,7 +10,7 @@ export const Card = ({ initial, name, email, status, dob }: CardProps) => {
             <p className="card-info">Status: {status}</p>
             <p className="card-info">Date of Birth: {dob}</p>
             <div className="buttons-container">
-                <button className="edit-btn">Edit</button>
+                <button className="edit-btn" onClick={onEdit} >Edit</button>
                 <button className="delete-btn">Delete</button>
             </div>
         </div>

@@ -9,6 +9,7 @@ import { useEffect, useRef } from "react";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import EditUser from "./Components/pages/EditUser";
 
 function App() {
   const theme = useThemeStore((state) => state.theme);
@@ -36,6 +37,7 @@ function App() {
             <Route element={<PrivateRoute />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/dashboard/new" element={<AddUser />} />
+              <Route path="/dashboard/edit/:id" element={<EditUser />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
