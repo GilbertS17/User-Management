@@ -44,9 +44,8 @@ const Dashboard = () => {
 
     // Fetch users based on the search query
     const { data: users = [], isLoading, isError, error, refetch } = useQuery<User[], Error>({
-        queryKey: ["users", debouncedSearch, accessToken], // use search query and access token for caching
+        queryKey: ["users", debouncedSearch, accessToken],
         queryFn: async () => {
-            // Constructing the URL with search query if needed
             const url = debouncedSearch
                 ? `/api/users?search=${encodeURIComponent(debouncedSearch)}`
                 : "/api/users";
@@ -70,7 +69,6 @@ const Dashboard = () => {
 
     useEffect(() => {
         refetch();
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

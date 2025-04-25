@@ -23,7 +23,7 @@ const fetchUser = async (id: string, token: string): Promise<UserInput> => {
         throw new Error(err.message || "Failed to fetch user");
     }
 
-    return json.result.data.user; // <- Correct structure
+    return json.result.data.user;
 };
 
 const EditUser: React.FC = () => {
@@ -43,7 +43,6 @@ const EditUser: React.FC = () => {
         resolver: zodResolver(userSchema),
     });
 
-    // Query for user
     const { data, isLoading, isError, error } = useQuery<UserInput, Error>({
         queryKey: ["user", id],
         queryFn: () => fetchUser(id!, token),
@@ -53,7 +52,6 @@ const EditUser: React.FC = () => {
     // Populate form fields with fetched data
     React.useEffect(() => {
         if (data) {
-            console.log("Fetched user:", data); // Optional: Debug print
             Object.entries(data).forEach(([key, value]) => {
                 setValue(key as keyof UserInput, value);
             });
