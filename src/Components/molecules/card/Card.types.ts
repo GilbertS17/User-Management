@@ -5,4 +5,5 @@ export interface CardProps {
   status: string;
   dob: string;
   onEdit?: () => void;
+  onDelete?: () => void;
 }
