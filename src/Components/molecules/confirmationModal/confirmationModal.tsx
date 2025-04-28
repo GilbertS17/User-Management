@@ -24,20 +24,20 @@ export const ConfirmationModal = ({
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 backdrop-blur-sm bg-black/30 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
-                <h3 className="text-xl font-semibold mb-4 dark:text-white">{title}</h3>
-                <p className="mb-6 dark:text-gray-300">{message}</p>
-                <div className="flex justify-end space-x-4">
+        <div className="conf-outer-container">
+            <div className="conf-inner-container">
+                <h3 className="conf-title">{title}</h3>
+                <p className="conf-message">{message}</p>
+                <div className="conf-button-container">
                     <button
                         onClick={onClose}
-                        className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700 dark:text-white"
+                        className="conf-cancel-button"
                     >
                         Cancel
                     </button>
                     <button
                         onClick={onConfirm}
-                        className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                        className="conf-delete-button"
                     >
                         Delete
                     </button>

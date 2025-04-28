@@ -8,14 +8,14 @@ const InputField = <TFormValues extends Record<string, unknown>>({
   type,
   error
 }: InputFieldProps<TFormValues>) => (
-  <div className="mb-4">
-    <label className="block text-sm text-gray-700 dark:text-gray-300 mb-1">{label}</label>
+  <div className="if-container">
+    <label className="if-label">{label}</label>
     <input
       {...register(name, { required })}
       type={type}
-      className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-800 dark:text-white dark:border-gray-700"
+      className="if-input"
     />
-    {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
+    {error && <p className="if-error">{error}</p>}
   </div>
 );
 

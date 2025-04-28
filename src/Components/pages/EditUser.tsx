@@ -100,9 +100,9 @@ const EditUser: React.FC = () => {
     return (
         <div>
             <Navbar showNavItems={false} />
-            <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-primary-mid-dark">
-                <div className="bg-white dark:bg-primary-dark shadow-lg rounded-xl p-8 w-full max-w-md">
-                    <h2 className="text-xl font-semibold text-center text-gray-800 dark:text-white mb-6">
+            <div className="edit-outer-container">
+                <div className="edit-inner-container">
+                    <h2 className="edit-title">
                         Edit User
                     </h2>
 

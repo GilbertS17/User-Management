@@ -89,9 +89,9 @@ export const AddUser: React.FC = () => {
     return (
         <div>
             <Navbar showNavItems={false} />
-            <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-primary-mid-dark">
-                <div className="bg-white dark:bg-primary-dark shadow-lg rounded-xl p-8 w-full max-w-md">
-                    <h2 className="text-xl font-semibold text-center text-gray-800 dark:text-white mb-6">
+            <div className="add-user-form">
+                <div className="add-inner-container">
+                    <h2 className="add-title">
                         Add New User
                     </h2>
                     <form onSubmit={handleSubmit(onSubmit)}>
@@ -127,12 +127,12 @@ export const AddUser: React.FC = () => {
                         />
 
                         <div className="mb-6">
-                            <label className="block text-sm text-gray-700 dark:text-gray-300 mb-1">
+                            <label className="status-label">
                                 Status
                             </label>
                             <select
                                 {...register("status")}
-                                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-800 dark:text-white dark:border-gray-700"
+                                className="select-input"
                             >
                                 <option value="active">Active</option>
                                 <option value="locked">Locked</option>
@@ -145,7 +145,7 @@ export const AddUser: React.FC = () => {
                         <div className="flex justify-center">
                             <button
                                 type="submit"
-                                className="px-4 py-2 bg-primary text-white font-semibold rounded-md hover:bg-primary-dark disabled:bg-gray-300 dark:disabled:bg-gray-700 dark:hover:bg-primary-light transition-colors"
+                                className="add-submit-button"
                                 disabled={mutation.isPending || !isFormValid}
                             >
                                 {mutation.isPending ? "Submitting..." : "Submit"}

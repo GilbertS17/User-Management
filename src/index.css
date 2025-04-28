@@ -130,7 +130,7 @@
 }
 
 .login-inner-container {
-  @apply bg-white shadow-md rounded-lg p-8 w-full max-w-sm dark:bg-primary-super-dark
+  @apply bg-white shadow-md rounded-lg p-8 w-full max-w-sm dark:bg-primary-super-dark;
 }
 
 .login-title {
@@ -173,4 +173,90 @@
 
 .home-btn {
   @apply px-6 py-3 bg-primary hover:bg-primary-super-dark text-white font-semibold rounded-lg shadow-md transition-all duration-300;
+}
+
+/* Confimation Modal */
+.conf-outer-container {
+  @apply fixed inset-0 backdrop-blur-sm bg-black/30 flex items-center justify-center z-50;
+}
+
+.conf-inner-container {
+  @apply bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4;
+}
+
+.conf-title {
+  @apply text-xl font-semibold mb-4 dark:text-white;
+}
+
+.conf-message {
+  @apply mb-6 dark:text-gray-300;
+}
+
+.conf-buttons-container {
+  @apply flex justify-end space-x-4;
+}
+.conf-cancel-btn {
+  @apply px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700 dark:text-white;
+}
+
+.conf-delete-btn {
+  @apply px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700;
+}
+
+/* inputfield */
+
+.if-container {
+  @apply mb-4;
+}
+
+.if-label {
+  @apply block text-sm text-gray-700 dark:text-gray-300 mb-1;
+}
+
+.if-input {
+  @apply w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-800 dark:text-white dark:border-gray-700;
+}
+
+.if-error {
+  @apply text-sm text-red-500 mt-1;
+}
+
+/* edit-user-page */
+
+.edit-outer-container {
+  @apply flex items-center justify-center min-h-screen bg-gray-100 dark:bg-primary-mid-dark;
+}
+
+.edit-inner-container {
+  @apply bg-white dark:bg-primary-dark shadow-lg rounded-xl p-8 w-full max-w-md;
+}
+
+.edit-title {
+  @apply text-xl font-semibold text-center text-gray-800 dark:text-white mb-6;
+}
+
+/* Add-user-page */
+
+.add-user-form {
+  @apply flex items-center justify-center min-h-screen bg-gray-100 dark:bg-primary-mid-dark;
+}
+
+.add-inner-container {
+  @apply bg-white dark:bg-primary-dark shadow-lg rounded-xl p-8 w-full max-w-md;
+}
+
+.add-title {
+  @apply text-xl font-semibold text-center text-gray-800 dark:text-white mb-6;
+}
+
+.status-label {
+  @apply block text-sm text-gray-700 dark:text-gray-300 mb-1;
+}
+
+.select-input {
+  @apply w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-800 dark:text-white dark:border-gray-700;
+}
+
+.add-submit-btn {
+  @apply px-4 py-2 bg-primary text-white font-semibold rounded-md hover:bg-primary-dark disabled:bg-gray-300 dark:disabled:bg-gray-700 dark:hover:bg-primary-light transition-colors;
 }
